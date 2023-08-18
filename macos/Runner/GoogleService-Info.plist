@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>312253214276-piq5qsh9n63f9k47pasfv5at4d3grqhc.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.312253214276-piq5qsh9n63f9k47pasfv5at4d3grqhc</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCreRadQbUFDhz8HxzAVaLxF4oM62i6AcI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>312253214276</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.bookingTransitionFlutter.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>booking-transition</string>
+	<key>STORAGE_BUCKET</key>
+	<string>booking-transition.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:312253214276:ios:c12f6dcbaf02528009d611</string>
+	<key>DATABASE_URL</key>
+	<string>https://booking-transition-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
