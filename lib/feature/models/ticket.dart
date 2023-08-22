@@ -5,12 +5,13 @@ class Ticket {
   String? pricesTotal;
   String? statusTicket;
   String? statusPayment;
+  String? methodPayment;
 
   Ticket(
-      {required this.idTicket,
-      required this.idAccount,
+      {required this.idAccount,
       required this.idTransition,
       required this.pricesTotal,
+      required this.methodPayment,
       required this.statusTicket,
       required this.statusPayment});
 }

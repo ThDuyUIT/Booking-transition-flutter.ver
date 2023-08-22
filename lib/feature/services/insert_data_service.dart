@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:booking_transition_flutter/feature/models/account_information.dart';
+import 'package:booking_transition_flutter/feature/presentation/page/Search/choose_seat.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import '../models/ticket.dart';
 
 class InsertDataService {
   static Future<bool> insertAccountInformation(
@@ -42,5 +45,48 @@ class InsertDataService {
     } catch (e) {
       print('fail upload');
     }
+  }
+
+  static Future insertNewTicket(Ticket ticket) async {
+    DatabaseReference ticketRef = FirebaseDatabase.instance.ref().child('VE');
+
+    String idTicket = 'VE${DateTime.now().microsecondsSinceEpoch}';
+
+    DatabaseReference idTicketRef = ticketRef.child(idTicket);
+
+    try {
+      await idTicketRef.set({
+        'idAccount': 'KH${ticket.idAccount}',
+        'idTransition': ticket.idTransition,
+        'priceTotal': ticket.pricesTotal,
+        'methodPayment': ticket.methodPayment,
+        'statusPayment': ticket.statusPayment,
+        'statusTicket': ticket.statusTicket
+      });
+      return idTicket;
+    } catch (e) {
+      print('Booking fail');
+    }
+  }
+
+  static Future inserDetailTicket(String idTicket) async {
+    DatabaseReference detailRef = FirebaseDatabase.instance.ref().child('CTVE');
+    late DatabaseReference idDetailRef;
+
+    late String keyChild;
+    StateChooseSeat.selectedSeats.forEach((element) async {
+      keyChild = 'CT${DateTime.now().microsecondsSinceEpoch}';
+      idDetailRef = detailRef.child(keyChild);
+
+      try {
+        await idDetailRef.set({'ticketId': idTicket, 'numberSeat': element});
+
+        //return idDetailRef;
+        print('Booking sucessful');
+      } catch (e) {
+        print('Booking fail');
+        return;
+      }
+    });
   }
 }

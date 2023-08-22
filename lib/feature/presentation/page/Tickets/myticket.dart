@@ -68,15 +68,15 @@ class StateMyTicket extends State<MyTicket> {
             BottomNavigationBarItem(
                 label: 'UPCOMING',
                 icon: Icon(
-                  Icons.circle,
+                  Icons.timer_outlined,
                 )),
             BottomNavigationBarItem(
               label: 'COMPLETE',
-              icon: Icon(Icons.circle),
+              icon: Icon(Icons.check_circle_outline),
             ),
             BottomNavigationBarItem(
               label: 'CANCEL',
-              icon: Icon(Icons.circle),
+              icon: Icon(Icons.cancel_outlined),
             )
           ],
           //onTap: (index) => _currentIndex.value = index,

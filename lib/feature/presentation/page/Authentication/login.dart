@@ -27,6 +27,8 @@ class StateLogin extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    String previousPage = Get.previousRoute;
+    print(previousPage);
     return SafeArea(
         child: Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -167,8 +169,18 @@ class StateLogin extends State<Login> {
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColor.mainColor,
                                   foregroundColor: Colors.white),
-                              onPressed: () {
-                                _loginController.onLogin(
+                              onPressed: () async {
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) {
+                                //       return Center(
+                                //         child: CircularProgressIndicator(
+                                //           color: AppColor.mainColor,
+                                //         ),
+                                //       );
+                                //     });
+                                FocusScope.of(context).unfocus();
+                                await _loginController.onLogin(
                                     _nameEditingController.text,
                                     _passwordEditingController.text);
                               },

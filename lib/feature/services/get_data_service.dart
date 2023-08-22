@@ -2,14 +2,18 @@ import 'package:booking_transition_flutter/feature/controller.dart/account_contr
 import 'package:booking_transition_flutter/feature/controller.dart/choose_route_controller.dart';
 import 'package:booking_transition_flutter/feature/models/account_information.dart';
 import 'package:booking_transition_flutter/feature/models/city_point.dart';
+import 'package:booking_transition_flutter/feature/models/ticket.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/find_route.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/list_item_route.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/search.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/seat_item.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Tickets/list_item_ticket.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import '../controller.dart/cities_controller.dart';
 
 // class GetDataService {
 //   Future<AccountInformation> fetchAccountInformation(String id) async {
@@ -43,7 +47,6 @@ class GetDataService {
     if (event.snapshot.value != null) {
       Map<dynamic, dynamic> userData =
           event.snapshot.value as Map<dynamic, dynamic>;
-      ;
 
       AccountInformation accountInformation = AccountInformation(
         fullName: userData['hoTen'],
@@ -95,44 +98,6 @@ class GetDataService {
         FirebaseDatabase.instance.ref().child('CHUYENXE');
     DatabaseEvent event = await routesRef.once();
 
-    // if (event.snapshot.value != null) {
-    //   Map<dynamic, dynamic> routesData =
-    //       event.snapshot.value as Map<dynamic, dynamic>;
-
-    //   routesData.forEach((keyRoute, valueRoute) async {
-    //     print(valueRoute['busNumber']);
-    //     if (StateSearch.startCity!.idCity == valueRoute['startPoint'] &&
-    //         StateSearch.endCity!.idCity == valueRoute['endPoint'] &&
-    //         StateSearch.departureDate == valueRoute['departureDate']) {
-    //       DatabaseReference vehicleRef =
-    //           FirebaseDatabase.instance.ref().child('XE');
-    //       DatabaseEvent event = await vehicleRef.once();
-
-    //       if (event.snapshot.value != null) {
-    //         Map<dynamic, dynamic> vehicleData =
-    //             event.snapshot.value as Map<dynamic, dynamic>;
-
-    //         //print();
-    //         vehicleData.forEach((keyVehicle, valueVehicle) {
-    //           if (valueRoute['busNumber'] == keyVehicle) {
-    //             ListItemTicket itemTicket = ListItemTicket(
-    //                 nameTicket: valueVehicle['nameTicket'],
-    //                 departureDate: valueRoute['departureDate'],
-    //                 departureTime: valueRoute['departureTime'],
-    //                 pricesTicket: valueRoute['priceTicket'],
-    //                 imageVehicle: valueVehicle['anhdaidienXe'],
-    //                 numberCar: keyVehicle);
-
-    //             routes.add(itemTicket);
-    //           }
-    //         });
-    //       }
-    //     }
-    //   });
-    //   print(routes.length);
-    //   return routes;
-    // }
-
     if (event.snapshot.value != null) {
       Map<dynamic, dynamic> routesData =
           event.snapshot.value as Map<dynamic, dynamic>;
@@ -158,14 +123,14 @@ class GetDataService {
 
               if (valueRoute['busNumber'] == keyVehicle) {
                 ListItemTicket itemTicket = ListItemTicket(
-                  nameTicket: valueVehicle['nameTicket'],
-                  departureDate: valueRoute['departureDate'],
-                  departureTime: valueRoute['departureTime'],
-                  pricesTicket: valueRoute['priceTicket'],
-                  imageVehicle: valueVehicle['anhdaidienXe'],
-                  numberCar: keyVehicle,
-                  idRoute: keyRoute,
-                );
+                    nameTicket: valueVehicle['nameTicket'],
+                    departureDate: valueRoute['departureDate'],
+                    departureTime: valueRoute['departureTime'],
+                    pricesTicket: valueRoute['priceTicket'],
+                    imageVehicle: valueVehicle['anhdaidienXe'],
+                    numberCar: keyVehicle,
+                    idRoute: keyRoute,
+                    capacity: valueVehicle['capacity']);
 
                 routes.add(itemTicket);
               }
@@ -176,6 +141,72 @@ class GetDataService {
 
       print(routes.length);
       return routes; // This line should be outside the for loop
+    }
+  }
+
+  static Future fetchATicket(String idTicket) async {
+    late Ticket ticket;
+    DatabaseReference ticketRef = FirebaseDatabase.instance.ref().child('VE');
+    DatabaseReference keyTicketRef = ticketRef.child(idTicket);
+    DatabaseEvent event = await keyTicketRef.once();
+    DataSnapshot snapshot = event.snapshot;
+
+    if (snapshot != null) {
+      Map<dynamic, dynamic> ticketData =
+          snapshot.value as Map<dynamic, dynamic>;
+      ticket = Ticket(
+          idAccount: ticketData['idAccount'],
+          idTransition: ticketData['idTransition'],
+          pricesTotal: ticketData['priceTotal'],
+          methodPayment: ticketData['methodPayment'],
+          statusTicket: ticketData['statusTicket'],
+          statusPayment: ticketData['statusPayment']);
+
+      return ticket;
+      //tick
+      //get and return data as ticket
+    }
+  }
+
+  static Future fetchSeats(String idTicket) async {
+    DatabaseReference detailRef = FirebaseDatabase.instance.ref().child('CTVE');
+    DatabaseEvent event = await detailRef.once();
+    List<String> numSeats = [];
+    if (event.snapshot.value != null) {
+      Map<dynamic, dynamic> detailTicketData =
+          event.snapshot.value as Map<dynamic, dynamic>;
+
+      for (var detailEntry in detailTicketData.entries) {
+        var keyDetail = detailEntry.key;
+        var valueDetail = detailEntry.value;
+
+        if (idTicket == valueDetail['ticketId']) {
+          numSeats.add(valueDetail['numberSeat']);
+        }
+      }
+      print(numSeats.length);
+      return numSeats;
+    }
+  }
+
+  static Future fetchInfoRoute(String idRoute) async {
+    late ListItemTicket route = ListItemTicket.non_para();
+    DatabaseReference routeRef =
+        FirebaseDatabase.instance.ref().child('CHUYENXE');
+    DatabaseReference keyRouteRef = routeRef.child(idRoute);
+    DatabaseEvent event = await keyRouteRef.once();
+    DataSnapshot snapshot = event.snapshot;
+
+    if (snapshot.value != null) {
+      Map<dynamic, dynamic> routeData =
+          event.snapshot.value as Map<dynamic, dynamic>;
+      route.from = routeData['startPoint'];
+      route.where = routeData['endPoint'];
+      route.numberCar = routeData['busNumber'];
+      route.departureDate = routeData['departureDate'];
+      route.departureTime = routeData['departureTime'];
+
+      return route;
     }
   }
 
@@ -199,7 +230,6 @@ class GetDataService {
         //combine with condition current id account and ticket status
         if (formatedAccountID == valueTicket['idAccount'] &&
             typeOfTicket.toString() == valueTicket['statusTicket']) {
-          print(keyTicket);
           //fetch data from CHUYENXE branch
           DatabaseReference routeRef =
               FirebaseDatabase.instance.ref().child('CHUYENXE');
@@ -236,7 +266,10 @@ class GetDataService {
                           pricesTicket: valueRoute['priceTicket'],
                           imageVehicle: valueVehicle['anhdaidienXe'],
                           numberCar: keyVehicle,
-                          idRoute: keyRoute);
+                          idRoute: keyRoute,
+                          capacity: valueVehicle['capacity']);
+
+                      item.idTicket = keyTicket;
 
                       bookedTickets.add(item);
                     }
@@ -309,5 +342,45 @@ class GetDataService {
     }
     //print(object)
     return bookedSeat;
+  }
+
+  static Future fetchPopularRoute() async {
+    List<ListItemRoute> featuredRoutes = [];
+    DatabaseReference featureRoutetRef =
+        FirebaseDatabase.instance.ref().child('CHUYENXE');
+    DatabaseEvent featureRoutetEvent = await featureRoutetRef.once();
+
+    if (featureRoutetEvent.snapshot.value != null) {
+      Map<dynamic, dynamic> featureData =
+          featureRoutetEvent.snapshot.value as Map<dynamic, dynamic>;
+
+      for (var featureEntry in featureData.entries) {
+        var keyFeature = featureEntry.key;
+        var valueFeature = featureEntry.value;
+
+        if (valueFeature['featuredRoute'] == '1') {
+          ListItemRoute itemRoute = ListItemRoute.non_para();
+          itemRoute.prices = valueFeature['priceTicket'];
+
+          final _cityPointController = Get.find<CitiesController>();
+          await _cityPointController.setListCities();
+          _cityPointController.cities.forEach((element) {
+            if (element.idCity == valueFeature['startPoint']) {
+              itemRoute.startCity = element;
+              itemRoute.startPoint = element.nameCity;
+            } else {
+              if (element.idCity == valueFeature['endPoint']) {
+                itemRoute.endCity = element;
+                itemRoute.endPoint = element.nameCity;
+                itemRoute.imageUrl = element.urlImage;
+              }
+            }
+          });
+          featuredRoutes.add(itemRoute);
+        }
+      }
+    }
+    print(featuredRoutes.length);
+    return featuredRoutes;
   }
 }

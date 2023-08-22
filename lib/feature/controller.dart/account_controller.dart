@@ -8,7 +8,7 @@ import '../services/get_data_service.dart';
 class AccountController {
   AccountInformation? accountInformation;
   String? uId;
-  Future setAccountInfo(AccountInformation acc) async {
+  void setAccountInfo(AccountInformation acc) {
     accountInformation = acc;
   }
 
@@ -16,7 +16,7 @@ class AccountController {
     uId = id;
   }
 
-  Future resetAccountInfo() async {
+  void resetAccountInfo() {
     accountInformation = null;
   }
 }

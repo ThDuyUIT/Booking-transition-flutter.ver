@@ -4,7 +4,9 @@ import 'package:booking_transition_flutter/feature/controller.dart/choose_route_
 import 'package:booking_transition_flutter/feature/presentation/page/Authentication/login.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/choose_route.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/list_16_seats.dart';
+import 'package:booking_transition_flutter/feature/presentation/page/Search/list_29_seat.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/search.dart';
+import 'package:booking_transition_flutter/feature/presentation/page/Search/steps_booking.dart';
 import 'package:booking_transition_flutter/feature/services/get_data_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,9 +28,9 @@ class ChooseSeat extends StatefulWidget {
 class StateChooseSeat extends State<ChooseSeat> {
   final _chooseRouteController = Get.find<ChooseRouteController>();
   static List<String> selectedSeats = [];
+
   @override
   Widget build(context) {
-    StateSearch.currentStep = 1;
     return Scaffold(
       backgroundColor: AppColor.mainColor,
       body: Padding(
@@ -185,13 +187,21 @@ class StateChooseSeat extends State<ChooseSeat> {
             const SizedBox(
               height: 20,
             ),
-            List16Seats(
-              onSeatsSelected: (selectedIndex) {
-                setState(() {
-                  selectedSeats = selectedIndex;
-                });
-              },
-            ),
+            _chooseRouteController.item.capacity == 16
+                ? List16Seats(
+                    onSeatsSelected: (selectedIndex) {
+                      setState(() {
+                        selectedSeats = selectedIndex;
+                      });
+                    },
+                  )
+                : List29Seats(
+                    onSeatsSelected: (selectedIndex) {
+                      setState(() {
+                        selectedSeats = selectedIndex;
+                      });
+                    },
+                  ),
             const SizedBox(
               height: 20,
             ),

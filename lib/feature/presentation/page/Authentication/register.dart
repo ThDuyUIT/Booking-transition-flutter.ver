@@ -215,16 +215,26 @@ class Register extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColor.mainColor,
                                 foregroundColor: Colors.white),
-                            onPressed: () {
+                            onPressed: () async {
                               String pass = _passwordEditingController.text;
                               String verifyPass = _verifyEditingController.text;
 
                               if (pass == verifyPass) {
-                                _signUpController.onRegister(
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColor.mainColor,
+                                        ),
+                                      );
+                                    });
+                                await _signUpController.onRegister(
                                     _fullnameEditingController.text,
                                     _phoneNumsEditingController.text,
                                     _usernameEditingController.text.trim(),
                                     _passwordEditingController.text.trim());
+                                Navigator.of(context).pop();
                               } else {
                                 print('verify fail');
                               }

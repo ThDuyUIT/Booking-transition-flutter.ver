@@ -1,3 +1,4 @@
+import 'package:booking_transition_flutter/feature/models/city_point.dart';
 import 'package:flutter/material.dart';
 
 class ListItemRoute {
@@ -5,6 +6,10 @@ class ListItemRoute {
   late String endPoint;
   late String prices;
   late String imageUrl;
+  late CityPoint startCity;
+  late CityPoint endCity;
+
+  ListItemRoute.non_para();
 
   ListItemRoute(
       {required this.startPoint,

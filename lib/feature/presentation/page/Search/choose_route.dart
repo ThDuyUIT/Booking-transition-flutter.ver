@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import '../../../services/get_data_service.dart';
 import '../Tickets/list_item_ticket_widget.dart';
 import 'find_route.dart';
+import 'list_29_seat.dart';
 
 class ChooseRoute extends StatelessWidget {
   static List<ListItemTicket> routes = [];
@@ -19,7 +20,7 @@ class ChooseRoute extends StatelessWidget {
   // ChooseRoute.not_exist({super.key});
 
   void CleanSearchRoute() {
-    StateSearch.currentStep = -1;
+    StateSearch.currentStep = 0;
     StateSearch.startCity = null;
     StateSearch.endCity = null;
     StateFindRoute.departureDate = null;
@@ -27,7 +28,7 @@ class ChooseRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    StateSearch.currentStep = 0;
+    StateSearch.currentStep = 1;
     return Scaffold(
       backgroundColor: AppColor.mainColor,
       body: Column(
@@ -138,8 +139,14 @@ class ChooseRoute extends StatelessWidget {
                         final _chooseRouteController =
                             Get.find<ChooseRouteController>();
                         _chooseRouteController.selectedRoute(item);
-                        StateList16Seats.bookedSeat =
-                            await GetDataService.fetchBookedSeat();
+                        if (_chooseRouteController.item.capacity == 16) {
+                          StateList16Seats.bookedSeat =
+                              await GetDataService.fetchBookedSeat();
+                        } else {
+                          StateList29Seats.bookedSeat =
+                              await GetDataService.fetchBookedSeat();
+                        }
+
                         tabController.animateTo(1);
                       },
                       child: ListItemTicketWidget(item: item));
@@ -150,37 +157,5 @@ class ChooseRoute extends StatelessWidget {
         ],
       ),
     );
-
-    // SafeArea(
-    //     child: Scaffold(
-    //   appBar: AppBar(
-    //     backgroundColor: AppColor.mainColor,
-    //     foregroundColor: Colors.white,
-    //     title: Container(
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.start,
-    //         children: [
-    //           Text(
-    //             '${StateFindRoute.startCity!.nameCity} - ${StateFindRoute.endCity!.nameCity}',
-    //             style: TextStyle(fontSize: 20),
-    //           ),
-    //           Text(
-    //             StateFindRoute.departureDate.toString(),
-    //             style: TextStyle(fontSize: 18),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //   ),
-    //   body: ListView.builder(
-    //     itemCount: routes.length,
-    //     scrollDirection: Axis.vertical,
-    //     itemBuilder: (context, index) {
-    //       ListItemTicket item = routes[index];
-
-    //       return ListItemTicketWidget(item: item);
-    //     },
-    //   ),
-    // ));
   }
 }

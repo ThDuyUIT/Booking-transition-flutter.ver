@@ -1,3 +1,4 @@
+import 'package:booking_transition_flutter/feature/controller.dart/feature_routes_controller.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,8 @@ class StateFindRoute extends State<FindRoute> {
   static CityPoint? endCity;
   static String? departureDate;
   int typePoint = 0;
-
+  final _featuredRouteController = Get.find<FeatureRouteController>();
+  static List<ListItemRoute> routes = [];
   // static choosedCity(CityPoint choosedCity, int typePoint) {
   //   if (typePoint == 1) {
   //     startCity = choosedCity;
@@ -130,7 +132,7 @@ class StateFindRoute extends State<FindRoute> {
                 Container(
                   width: double.infinity,
                   height: 1,
-                  color: Colors.grey,
+                  color: Colors.grey.shade300,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -175,7 +177,7 @@ class StateFindRoute extends State<FindRoute> {
                 Container(
                   width: double.infinity,
                   height: 1,
-                  color: Colors.grey,
+                  color: Colors.grey.shade300,
                 ),
                 GestureDetector(
                   onTap: () async {
@@ -293,17 +295,17 @@ class StateFindRoute extends State<FindRoute> {
                 if (routes.isEmpty) {
                   failResult = 'Not find available routes';
                   snackBar = SnackBar(
-                      backgroundColor: AppColor.mainColor,
+                      backgroundColor: Colors.white,
                       content: Text(
                         failResult,
                         style:
-                            const TextStyle(color: Colors.white, fontSize: 18),
+                            TextStyle(color: AppColor.mainColor, fontSize: 18),
                       ));
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 } else {
                   //Get.to(
                   print('${routes.length} routes');
-                  StateSearch.currentStep = 0;
+                  StateSearch.currentStep = 1;
                   ChooseRoute.routes = routes;
                   Get.offAll(Search());
                   //);
@@ -317,29 +319,70 @@ class StateFindRoute extends State<FindRoute> {
         const SizedBox(
           height: 20,
         ),
-        SizedBox(
+        const SizedBox(
           width: double.infinity,
           child: Text(
             'Popular Routes: ',
             textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 20, color: Colors.white),
+            style: TextStyle(
+                fontSize: 25, color: Colors.white, fontFamily: 'Roboto bold'),
           ),
         ),
-        SizedBox(
-          height: 220,
-          child: ListView.builder(
-            itemCount: 5,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (BuildContext context, int index) {
-              ListItemRoute item = ListItemRoute(
-                  startPoint: 'Tp Ho Chi Minh',
-                  endPoint: 'Vinh Long',
-                  prices: '120000',
-                  imageUrl: 'assets/images/vinhlong.jpg');
-              return ListItemWidget(item: item);
-            },
-          ),
-        )
+        const SizedBox(
+          height: 20,
+        ),
+        routes.isNotEmpty
+            ? SizedBox(
+                height: 220,
+                child: ListView.builder(
+                  itemCount: routes.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            startCity = routes[index].startCity;
+                            endCity = routes[index].endCity;
+                          });
+                        },
+                        child: ListItemWidget(item: routes[index]));
+                  },
+                ))
+            : SizedBox(
+                height: 220,
+                child: FutureBuilder(
+                  future: _featuredRouteController.setFeaturedRoutes(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error loading data');
+                    } else if (!snapshot.hasData) {
+                      return Text('No data available');
+                    } else {
+                      routes = snapshot.data;
+                      return ListView.builder(
+                        itemCount: routes.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                              onTap: () async {
+                                setState(() {
+                                  startCity = routes[index].startCity;
+                                  endCity = routes[index].endCity;
+                                });
+                              },
+                              child: ListItemWidget(item: routes[index]));
+                        },
+                      );
+                    }
+                  },
+                ),
+              )
       ],
     );
   }

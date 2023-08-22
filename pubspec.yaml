@@ -71,6 +71,8 @@ flutter:
   - assets/images/banner_login.jpg
   - assets/images/register_banner.png
   - assets/images/sign_up_banner.jpg
+  - assets/images/bus_station.jpg
+  - assets/images/zalopay.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

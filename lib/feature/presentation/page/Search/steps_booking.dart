@@ -4,6 +4,7 @@ import 'package:booking_transition_flutter/core/utils/colors.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/choose_route.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/confirm_booking.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/find_route.dart';
+import 'package:booking_transition_flutter/feature/presentation/page/Search/search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,7 +21,6 @@ class StateStepsBooking extends State<StepsBooking>
     with TickerProviderStateMixin {
   //static int currentStep = -1;
   late TabController _tabController;
-
   @override
   void initState() {
     super.initState();
@@ -29,7 +29,7 @@ class StateStepsBooking extends State<StepsBooking>
 
   @override
   Widget build(BuildContext context) {
-    //currentStep = 0;
+    //StateSearch.currentStep = 1;
     return DefaultTabController(
         length: 3,
         child: Scaffold(

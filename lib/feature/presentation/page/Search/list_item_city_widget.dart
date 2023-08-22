@@ -18,7 +18,7 @@ class ListItemCityWidget extends StatelessWidget {
         //         item.idCity != StateSearch.endCity?.idCity
         //     ? Colors.white
         //     : Colors.grey.shade400,
-        border: Border(bottom: BorderSide(color: Colors.grey)),
+        border: Border(bottom: BorderSide(color: Colors.grey.shade300)),
         //borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
       ),
       child: Column(

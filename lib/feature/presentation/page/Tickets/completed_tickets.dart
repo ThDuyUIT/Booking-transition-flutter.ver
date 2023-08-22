@@ -7,7 +7,9 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../../../controller.dart/bookedticket_controller.dart';
+import '../../../controller.dart/detailticket_controller.dart';
 import '../../../services/get_data_service.dart';
+import 'detail_ticket.dart';
 import 'list_item_ticket.dart';
 import 'list_item_ticket_widget.dart';
 
@@ -109,7 +111,31 @@ class StateCompletedTicket extends State<CompletedTicket> {
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     ListItemTicket item = completeTickets[index];
-                    return ListItemTicketWidget(item: item);
+                    return GestureDetector(
+                        onTap: () async {
+                          final _detailTicketController =
+                              Get.find<DetailTicketController>();
+
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColor.mainColor,
+                                  ),
+                                );
+                              });
+
+                          await _detailTicketController
+                              .getInfoTicket(item.idTicket);
+                          await _detailTicketController.getSeat(item.idTicket);
+
+                          await _detailTicketController
+                              .getInfoRoute(item.idRoute);
+                          Navigator.of(context).pop();
+                          Get.to(DetailTicket());
+                        },
+                        child: ListItemTicketWidget(item: item));
                   },
                 ),
               ),

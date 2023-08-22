@@ -15,6 +15,7 @@ class ListItemWidget extends StatelessWidget {
       height: 100,
       width: 300,
       child: Card(
+        elevation: 5,
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         child: Column(
@@ -23,7 +24,7 @@ class ListItemWidget extends StatelessWidget {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(10)),
               child: Image(
-                  image: ResizeImage(AssetImage(item.imageUrl),
+                  image: ResizeImage(NetworkImage(item.imageUrl),
                       height: 150, width: 300)),
             ),
             const SizedBox(
@@ -34,7 +35,7 @@ class ListItemWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: 18,
                   color: AppColor.mainColor,
-                  fontFamily: 'Playfair Display'),
+                  fontFamily: 'Roboto bold'),
             ),
             Text(
               '${item.prices} VND',

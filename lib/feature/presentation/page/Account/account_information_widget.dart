@@ -3,6 +3,7 @@ import 'package:booking_transition_flutter/feature/models/account_information.da
 import 'package:booking_transition_flutter/feature/presentation/page/Account/edit_account_information_widget.dart';
 import 'package:booking_transition_flutter/feature/presentation/page/Search/search.dart';
 import 'package:booking_transition_flutter/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -31,6 +32,15 @@ class StateAccountInformation extends State<AccountInformationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return Center(
+    //         child: CircularProgressIndicator(
+    //           color: AppColor.mainColor,
+    //         ),
+    //       );
+    //     });
     return Container(
       child: Column(
         children: [
@@ -321,10 +331,14 @@ class StateAccountInformation extends State<AccountInformationWidget> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: Colors.redAccent),
-                          onPressed: () {
+                          onPressed: () async {
+                            final FirebaseAuth _auth = FirebaseAuth.instance;
+
+                            await _auth.signOut();
                             AccountController accountController =
                                 Get.find<AccountController>();
                             accountController.resetAccountInfo();
+
                             Get.offAll(Search());
                           },
                           label: const Text(
